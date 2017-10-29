@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <assert.h>
+#include <string>
 
 unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& height)
 {
@@ -34,23 +35,36 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		}
 
 		// The BITMAPFILEHEADER struct is 14 bytes long, so bmpFile[14] should be the start of the BITMAPV5HEADER
-		// 
+		// bmpFile[19] should be the start of the height long
+		// bmpFile[23] should be the start of the width long
+		width = BMP_Helper.getNumber(bmpFile, 19, 4);
+		height = BMP_Helper.getNumber(bmpFile, 23, 4);
 
-		// read past the BITMAP FILE HEADER
-		// open up BITMAPV5HEADER
-		// read and save width
-		// read and save height
-		// initialize bmp
+		// initialize rgbVals
 		// ignore a bunch of other stuff I don't want to understand
-		// read the pixel array, populate bmp
+		// read the pixel array, populate rgbVals
 
 		delete[] bmpFile;
 	}
 
 	return rgbVals;
+
 }
 
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
 {
 
 }
+
+class BMP_Helper
+{
+	static int getNumber(char* bmpFile, int index, int charsToRead)
+	{
+		// concatenate the chars in reverse order
+		std::string number = "";
+		for (int i = index + charsToRead - 1; i >= index; i--)
+			number += bmpFile[i];
+		// convert that to a number
+		return atoi(number.c_str());
+	}
+};
