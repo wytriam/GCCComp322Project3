@@ -1,0 +1,25 @@
+// BITMAPFILEHEADER
+42 4D 		// bfType
+46 00 00 00 // bfSize
+00 00 		// bfReserved1
+00 00 		// bfReserved2
+36 00 00 00 // bfOffBits
+
+// BITMAPV5HEADER
+28 00 00 00 // bV5Size
+02 00 00 00 // bV5Width
+02 00 00 00 // bV5Height
+01 00 		// bV5Planes
+18 00 		// bV5BitCount
+00 00 00 00 // bV5Compression
+00 00 00 00 // bV5SizeImage
+C4 0E 00 00 // bV5XPelsPerMeter;
+C4 0E 00 00 // bV5YPelsPerMeter
+00 00 00 00 // bV5ClrUsed;
+00 00 00 00 // bV5ClrImportant;
+
+//RGBQUAD Array
+FF FF 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
+FF 00 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
+FF FF 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
+FF 00 00 FF // rgbBlue rgbGreen rgbRed rgbReserved

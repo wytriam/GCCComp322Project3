@@ -6,7 +6,7 @@
 unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& height)
 {
 	// create an array to return
-	unsigned char rgbVals [5];
+	unsigned char* rgbVals;
 
 	std::streampos size;
 	char * bmpFile;
@@ -32,6 +32,9 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		{
 			throw "File does not begin with BM. Either not a bitmap file or not file is corrupted.";
 		}
+
+		// The BITMAPFILEHEADER struct is 14 bytes long, so bmpFile[14] should be the start of the BITMAPV5HEADER
+		// 
 
 		// read past the BITMAP FILE HEADER
 		// open up BITMAPV5HEADER
