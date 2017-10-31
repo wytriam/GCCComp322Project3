@@ -60,7 +60,7 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 }
 
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
-{
+{	
 	std::ofstream fout(filename, std::ios::binary | std::ios::out | std::ios::trunc);
 	if (fout.is_open())
 	{
@@ -69,18 +69,24 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		if (padding == 4)
 			padding = 0;
 		
+		char emptyWord[] = { '\0', '\0' };
+		char* forItoA = new char[sizeof(int) * 8 + 1];
+
+
 		// BITMAPFILEHEADER - https://msdn.microsoft.com/en-us/library/windows/desktop/dd183374(v=vs.85).aspx
 		// bfType - The file type; must be BM
 		Helper::write(fout, "B", 1);
 		Helper::write(fout, "M", 1);
 		// bfSize - The size, in bytes, of the bitmap file
 		int size = 54 + (((width * 3) + padding) * height);
-		char* sizeString = new char[sizeof(int) * 8 + 1];
-		Helper::write(fout, itoa(size, sizeString, 10), 4);
-		delete[] sizeString;
+		Helper::write(fout, itoa(size, forItoA, 10), 4);
 		// bfReserved1 - Reserved, must be zero
 		// bfReserved2 - Reserved; must be zero
+		for (int i = 0; i < 4; i++)
+			Helper::write(fout, emptyWord, 2);
 		// bfOffBits - The offset, in bytes, from the beginning of the BITMAPFILEHEADER structure to the bitmap bits
+		int offset = 54;
+		Helper::write(fout, itoa(offset, forItoA, 10), 4);
 
 		// BITMAPV5HEADER - https://msdn.microsoft.com/en-us/library/windows/desktop/dd183381(v=vs.85).aspx
 		// bV5Size - The number of bytes required by the structure. Applications should use this member to determine which bitmap information header structure is being used.
@@ -99,5 +105,9 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		// bV5ClrUsed - The number of color indexes in the color that are actually used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the bV5BitCount member for the compression mode specified by bV5Compression
 		// bV5ClrImportant - The number of color indexes that are required for displaying the bitmap. If this value is zero, all colors are required
 		// Pixel Data
+
+		delete[] forItoA;
 	}
+
+	fout.close();
 }
