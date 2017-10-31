@@ -51,7 +51,6 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		for (int i = 0; i < size; i++)
 			rgbVals[i] = bmpFile[i + 54];
 
-
 		delete[] bmpFile;
 	}
 
@@ -61,5 +60,10 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
 {
-
+	std::ofstream fout(filename, std::ios::binary | std::ios::out | std::ios::trunc);
+	if (fout.is_open())
+	{
+		std::string signature = "BM";
+		fout.write(signature.c_str(), 2);
+	}
 }
