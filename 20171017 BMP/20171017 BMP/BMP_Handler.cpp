@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <string>
 
+#include "Helper.h"
+
 unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& height)
 {
 	// create an array to return
@@ -37,12 +39,18 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// The BITMAPFILEHEADER struct is 14 bytes long, so bmpFile[14] should be the start of the BITMAPV5HEADER
 		// bmpFile[19] should be the start of the height long
 		// bmpFile[23] should be the start of the width long
-		width = getNumber(bmpFile, 19, 4);
-		height = getNumber(bmpFile, 23, 4);
+		width = Helper.getNumber(bmpFile, 19, 4);
+		height = Helper.getNumber(bmpFile, 23, 4);
 
 		// initialize rgbVals
-		// ignore a bunch of other stuff I don't want to understand
+		int size = width*height;
+		rgbVals = new unsigned char[size];
+		
 		// read the pixel array, populate rgbVals
+		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
+		for (int i = 0; i < size; i++)
+			rgbVals[i] = bmpFile[i + 54];
+
 
 		delete[] bmpFile;
 	}
@@ -54,14 +62,4 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
 {
 
-}
-
-int BMP_Handler::getNumber(const char* bmpFile, int index, int range)
-{
-	std::string val = ""; 
-	for (int i = index + range - 1; i >= index; i--)
-	{
-		val += bmpFile[i];
-	}
-	return atoi(val.c_str());
 }
