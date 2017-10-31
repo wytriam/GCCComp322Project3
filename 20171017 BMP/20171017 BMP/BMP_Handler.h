@@ -12,4 +12,7 @@ public:
 	static BMP_API unsigned char* loadBMP(const char*, int&, int&);
 
 	static BMP_API void saveBMP(const char*, const unsigned char*, int, int);
+
+private:
+	static BMP_API int getNumber(const char*, int, int);
 };

@@ -37,8 +37,8 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// The BITMAPFILEHEADER struct is 14 bytes long, so bmpFile[14] should be the start of the BITMAPV5HEADER
 		// bmpFile[19] should be the start of the height long
 		// bmpFile[23] should be the start of the width long
-		width = BMP_Helper.getNumber(bmpFile, 19, 4);
-		height = BMP_Helper.getNumber(bmpFile, 23, 4);
+		width = getNumber(bmpFile, 19, 4);
+		height = getNumber(bmpFile, 23, 4);
 
 		// initialize rgbVals
 		// ignore a bunch of other stuff I don't want to understand
@@ -56,15 +56,12 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 
 }
 
-class BMP_Helper
+int BMP_Handler::getNumber(const char* bmpFile, int index, int range)
 {
-	static int getNumber(char* bmpFile, int index, int charsToRead)
+	std::string val = ""; 
+	for (int i = index + range - 1; i >= index; i--)
 	{
-		// concatenate the chars in reverse order
-		std::string number = "";
-		for (int i = index + charsToRead - 1; i >= index; i--)
-			number += bmpFile[i];
-		// convert that to a number
-		return atoi(number.c_str());
+		val += bmpFile[i];
 	}
-};
+	return atoi(val.c_str());
+}

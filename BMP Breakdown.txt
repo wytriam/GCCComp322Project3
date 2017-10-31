@@ -13,13 +13,17 @@
 18 00 		// bV5BitCount
 00 00 00 00 // bV5Compression
 00 00 00 00 // bV5SizeImage
-C4 0E 00 00 // bV5XPelsPerMeter;
+C4 0E 00 00 // bV5XPelsPerMeter
 C4 0E 00 00 // bV5YPelsPerMeter
-00 00 00 00 // bV5ClrUsed;
-00 00 00 00 // bV5ClrImportant;
+00 00 00 00 // bV5ClrUsed
+00 00 00 00 // bV5ClrImportant
 
 //RGBQUAD Array
 FF FF 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
 FF 00 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
 FF FF 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
 FF 00 00 FF // rgbBlue rgbGreen rgbRed rgbReserved
+
+https://msdn.microsoft.com/en-us/library/windows/desktop/dd162461(v=vs.85).aspx
+https://msdn.microsoft.com/en-us/library/windows/desktop/dd183374(v=vs.85).aspx
+https://msdn.microsoft.com/en-us/library/windows/desktop/dd183381(v=vs.85).aspx
