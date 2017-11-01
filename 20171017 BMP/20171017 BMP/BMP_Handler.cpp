@@ -54,11 +54,12 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 11, 4);
-		for (int i = 0; i < RGBsize; i++)
+		// loop over everything, skipping over the padding
+		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < (width * 3); j++)
 			{
-				rgbVals[(i*height) + width] = bmpFile[offset + ((i*height) + width)];
+				rgbVals[(i*height) + j] = bmpFile[offset + ((i*height) + j)];
 			}
 		}
 
