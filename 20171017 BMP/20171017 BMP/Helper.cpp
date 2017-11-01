@@ -1,5 +1,10 @@
+/*
+	This is a collection of helper functions for the Project 3 - BMP Reader/Writer
+*/
+
 #include "Helper.h"
 
+// read a number from some amount of bytes in Little Endian
 int Helper::getNumber(const char* bmpFile, int index, int range)
 {
 	std::string val = "";
@@ -10,6 +15,7 @@ int Helper::getNumber(const char* bmpFile, int index, int range)
 	return atoi(val.c_str());
 }
 
+// input a string
 void Helper::write(std::ofstream& fout, std::string input, int size)
 {
 	//convert input to char*
@@ -29,6 +35,7 @@ void Helper::write(std::ofstream& fout, std::string input, int size)
 	delete[] cinput;
 }
 
+// input a char *
 void Helper::write(std::ofstream& fout, char* input, int size)
 {
 	//write to fout
@@ -37,6 +44,7 @@ void Helper::write(std::ofstream& fout, char* input, int size)
 	//fout.seekp(fout.tellp(), size);
 }
 
+// input a char
 void Helper::write(std::ofstream& fout, char input, int size)
 {
 	char cinput[] = { input };
@@ -46,6 +54,7 @@ void Helper::write(std::ofstream& fout, char input, int size)
 	//fout.seekp(fout.tellp(), size);
 }
 
+// input an int
 void Helper::write(std::ofstream& fout, int input, int size)
 {
 	char* cinput = reinterpret_cast<char *>(&input);
@@ -55,6 +64,7 @@ void Helper::write(std::ofstream& fout, int input, int size)
 	//fout.seekp(fout.tellp(), size);
 }
 
+// flip a char*
 char* Helper::toLittleEndian(char* input, int size)
 {
 	// Adapted from http://www.cplusplus.com/forum/beginner/189483/
