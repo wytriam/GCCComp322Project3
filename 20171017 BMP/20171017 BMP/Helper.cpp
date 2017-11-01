@@ -18,7 +18,7 @@ void Helper::write(std::ofstream& fout, std::string input, int size)
 	{
 		char c; 
 		c = input.c_str()[i];
-		if (c == '\0')
+		if (c == '\0')	// we don't want the null terminator at the end of a c-string
 			break;
 		cinput[i] = c;
 	}
@@ -33,6 +33,15 @@ void Helper::write(std::ofstream& fout, char* input, int size)
 {
 	//write to fout
 	fout.write(toLittleEndian(input, size), size);
+	//move the stream pointer to the next read position
+	fout.seekp(fout.tellp, size);
+}
+
+void Helper::write(std::ofstream& fout, char input, int size)
+{
+	char cinput[] = { input };
+	//write to fout
+	fout.write(cinput, size);
 	//move the stream pointer to the next read position
 	fout.seekp(fout.tellp, size);
 }

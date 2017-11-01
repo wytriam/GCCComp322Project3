@@ -10,5 +10,6 @@ public:
 	static int getNumber(const char*, int, int);
 	static void write(std::ofstream&, std::string, int);
 	static void write(std::ofstream&, char*, int);
+	static void write(std::ofstream&, char, int);
 	static char* toLittleEndian(char*, int);
 };
