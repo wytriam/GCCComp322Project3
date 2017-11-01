@@ -11,6 +11,11 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 	// create an array to return
 	unsigned char* rgbVals;
 
+	// calculate necessary padding
+	int padding = 4 - ((width * 3) % 4);
+	if (padding == 4)
+		padding = 0;
+
 	std::streampos size;
 	char * bmpFile;
 
@@ -43,14 +48,19 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		height = Helper::getNumber(bmpFile, 23, 4);
 
 		// initialize rgbVals
-		int size = width*height;
-		rgbVals = new unsigned char[size];
+		int RGBsize = ((width*3) + padding ) * height;
+		rgbVals = new unsigned char[RGBsize];
 		
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 11, 4);
-		for (int i = 0; i < size; i++)
-			rgbVals[i] = bmpFile[i + offset];
+		for (int i = 0; i < RGBsize; i++)
+		{
+			for (int j = 0; j < (width * 3); j++)
+			{
+				rgbVals[(i*height) + width] = bmpFile[offset + ((i*height) + width)];
+			}
+		}
 
 		delete[] bmpFile;
 	}
