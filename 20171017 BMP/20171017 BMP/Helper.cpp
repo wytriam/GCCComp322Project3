@@ -25,7 +25,7 @@ void Helper::write(std::ofstream& fout, std::string input, int size)
 	//write to fout
 	fout.write(toLittleEndian(cinput, size), size);
 	//move the stream pointer to the next read position
-	fout.seekp(fout.tellp, size);
+	fout.seekp(fout.tellp(), size);
 	delete[] cinput;
 }
 
@@ -34,7 +34,7 @@ void Helper::write(std::ofstream& fout, char* input, int size)
 	//write to fout
 	fout.write(toLittleEndian(input, size), size);
 	//move the stream pointer to the next read position
-	fout.seekp(fout.tellp, size);
+	fout.seekp(fout.tellp(), size);
 }
 
 void Helper::write(std::ofstream& fout, char input, int size)
@@ -43,7 +43,26 @@ void Helper::write(std::ofstream& fout, char input, int size)
 	//write to fout
 	fout.write(cinput, size);
 	//move the stream pointer to the next read position
-	fout.seekp(fout.tellp, size);
+	fout.seekp(fout.tellp(), size);
+}
+
+void Helper::write(std::ofstream& fout, int input, int size)
+{
+	// create array to put number into
+	char* cinput = new char[size];
+	// populate array with number as chars. 
+	for (int i = 0; i < size; i++)
+	{
+		// isolate digit
+		int temp = input / int(pow(10, i));
+		cinput[size - 1 - i] = char(temp%10);
+	}
+	
+	//write to fout
+	fout.write(toLittleEndian(cinput, size), size);
+	//move the stream pointer to the next read position
+	fout.seekp(fout.tellp(), size);
+	delete[] cinput;
 }
 
 char* Helper::toLittleEndian(char* input, int size)

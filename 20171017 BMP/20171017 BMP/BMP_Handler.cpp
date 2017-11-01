@@ -9,12 +9,7 @@
 unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& height)
 {
 	// create an array to return
-	unsigned char* rgbVals;
-
-	// calculate necessary padding
-	int padding = 4 - ((width * 3) % 4);
-	if (padding == 4)
-		padding = 0;
+	unsigned char* rgbVals = NULL;
 
 	std::streampos size;
 	char * bmpFile;
@@ -47,6 +42,11 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		width = Helper::getNumber(bmpFile, 19, 4);
 		height = Helper::getNumber(bmpFile, 23, 4);
 
+		// calculate necessary padding
+		int padding = 4 - ((width * 3) % 4);
+		if (padding == 4)
+			padding = 0;
+
 		// initialize rgbVals
 		int RGBsize = ((width*3) + padding ) * height;
 		rgbVals = new unsigned char[RGBsize];
@@ -67,7 +67,6 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 	}
 
 	return rgbVals;
-
 }
 
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
@@ -83,41 +82,39 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		// set up some variables to be used in writing
 		char emptyWord[] = { '\0', '\0' };
 		char emptyDWord[] = { '\0', '\0', '\0', '\0' };
-		char* forItoA = new char[sizeof(int) * 8 + 1];
-
 
 		// BITMAPFILEHEADER - https://msdn.microsoft.com/en-us/library/windows/desktop/dd183374(v=vs.85).aspx
 		// bfType - The file type; must be BM
-		Helper::write(fout, 'B', 1);
+		Helper::write(fout, "B", 1);
 		Helper::write(fout, 'M', 1);
 		// bfSize - The size, in bytes, of the bitmap file
 		int size = 54 + (((width * 3) + padding) * height);
-		Helper::write(fout, itoa(size, forItoA, 10), 4);
+		Helper::write(fout, size, 4);
 		// bfReserved1 - Reserved, must be zero
 		Helper::write(fout, emptyDWord, 4);
 		// bfReserved2 - Reserved; must be zero
 		Helper::write(fout, emptyDWord, 4);
 		// bfOffBits - The offset, in bytes, from the beginning of the BITMAPFILEHEADER structure to the bitmap bits
 		int offset = 54;
-		Helper::write(fout, itoa(offset, forItoA, 10), 4);
+		Helper::write(fout, offset, 4);
 
 		// BITMAPV5HEADER - https://msdn.microsoft.com/en-us/library/windows/desktop/dd183381(v=vs.85).aspx
 		// bV5Size - The number of bytes required by the structure. Applications should use this member to determine which bitmap information header structure is being used.
 		// should be 40
 		int bV5Size = 40;
-		Helper::write(fout, itoa(bV5Size, forItoA, 10), 4);
+		Helper::write(fout, bV5Size, 4);
 		// bV5Width - The width of the bitmap, in pixels.
-		Helper::write(fout, itoa(width, forItoA, 10), 4);
+		Helper::write(fout, width, 4);
 		// bV5Height - The height of the bitmap, in pixels. 
-		Helper::write(fout, itoa(height, forItoA, 10), 4);
+		Helper::write(fout, height, 4);
 		// bV5Planes - The number of planes for the target device. This value must be set to 1.
-		Helper::write(fout, itoa(1, forItoA, 10), 2);
+		Helper::write(fout, 1, 2);
 		// bV5BitCount - The number of bits that define each pixel and the maximum number of colors in the bitmap. 
 			// Value - 24. Meaning: The bitmap has a maximum of 2^24 colors, and the bmiColors member of BITMAPINFO is NULL.
 			// Each 3-byte triplet in the bitmap array represents the relative intensites of blue, green, and red, respecitively
 			// for a pixel. The bmiColors color table is used for optimizing colors used on palette-based devices, and 
 			// must contain the number of entried specifed by the bV5ClrUsed member of the BITMAPV5HEADER structure
-		Helper::write(fout, itoa(24, forItoA, 10), 2);
+		Helper::write(fout, 24, 2);
 		// bV5Compression - Specifies that the bitmap is not compressed. BI_RGB is an uncompressed format.
 		Helper::write(fout, emptyDWord, 4);
 		// bV5SizeImage - The size, in bytes, of the image. This may be set to zero for BI_RGB bitmaps
@@ -140,8 +137,6 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 			for (int j = 0; j < padding; j++)
 				Helper::write(fout, '\0', 1);
 		}
-
-		delete[] forItoA;
 	}
 
 	fout.close();
