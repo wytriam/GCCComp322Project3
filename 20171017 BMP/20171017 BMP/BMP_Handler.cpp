@@ -1,38 +1,49 @@
 #include "BMP_Handler.h"
 #include <fstream>
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 #include <string>
 
 #include "Helper.h"
 
 unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& height)
 {
+	assert(1 == 0);
 	// create an array to return
 	unsigned char* rgbVals = NULL;
-
+	assert(2 == 0);
 	std::streampos size;
+	assert(3 == 0);
 	char * bmpFile;
-
+	assert(4 == 0);
 	// open the file in binary mode
 	std::ifstream fin;
+	assert(5 == 0);
 	fin.open(filename, std::ios::in | std::ios::binary | std::ios::ate);
+	assert(6 == 0);
 	// if the file is open...
 	if (fin.is_open())
 	{
+		assert(7 == 0);
 		// put file into memory
 		// adapted from http://www.cplusplus.com/doc/tutorial/files/
 
 		size = fin.tellg();
+		assert(8 == 0);
 		bmpFile = new char[size];
+		assert(9 == 0);
 		fin.seekg(0, std::ios::beg);
+		assert(10 == 0);
 		fin.read(bmpFile, size);
+		assert(11 == 0);
 		fin.close();
+		assert(12 == 0);
 
 		// check the file signature (make sure this is .bmp). Signature should be BM (01000010 01001101 in ASCII)
 		// 1 char = 1 byte
 		if (!(bmpFile[0] == 'B' && bmpFile[1] == 'M'))
 		{
+			assert(13 == 0);
 			throw "File does not begin with BM. Either not a bitmap file or not file is corrupted.";
 		}
 
@@ -40,20 +51,27 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// bmpFile[19] should be the start of the height long
 		// bmpFile[23] should be the start of the width long
 		width = Helper::getNumber(bmpFile, 19, 4);
+		assert(14 == 0);
 		height = Helper::getNumber(bmpFile, 23, 4);
+		assert(15 == 0);
 
 		// calculate necessary padding
 		int padding = 4 - ((width * 3) % 4);
+		assert(16 == 0);
 		if (padding == 4)
 			padding = 0;
+		assert(17 == 0);
 
 		// initialize rgbVals
 		int RGBsize = ((width*3) + padding ) * height;
+		assert(18 == 0);
 		rgbVals = new unsigned char[RGBsize];
+		assert(19 == 0);
 		
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 11, 4);
+		assert(20 == 0);
 		// loop over everything, skipping over the padding
 		for (int i = 0; i < height; i++)
 		{
@@ -62,15 +80,16 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 				rgbVals[(i*height) + j] = bmpFile[offset + ((i*height) + j)];
 			}
 		}
-
+		assert(21 == 0);
 		delete[] bmpFile;
+		assert(22 == 0);
 	}
-
 	return rgbVals;
 }
 
 void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, int width, int height)
 {	
+	assert(2 == 1);
 	std::ofstream fout(filename, std::ios::binary | std::ios::out | std::ios::trunc);
 	if (fout.is_open())
 	{
