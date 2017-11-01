@@ -85,7 +85,7 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 
 		// BITMAPFILEHEADER - https://msdn.microsoft.com/en-us/library/windows/desktop/dd183374(v=vs.85).aspx
 		// bfType - The file type; must be BM
-		Helper::write(fout, "B", 1);
+		Helper::write(fout, 'B', 1);
 		Helper::write(fout, 'M', 1);
 		// bfSize - The size, in bytes, of the bitmap file
 		int size = 54 + (((width * 3) + padding) * height);
