@@ -53,7 +53,7 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 10, 4);
-		offset--; // stupid count by one
+		//offset--; // stupid count by one
 		// loop over everything, skipping over the padding
 
 		int rowLength = width * 3 + padding;
@@ -61,7 +61,10 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		{
 			for (int j = 0; j < rowLength-padding; j++)
 			{
-				rgbVals[(i*rowLength - padding) + j] = bmpFile[offset + ((i*rowLength) + j)];
+				int indexBMP = ((i*rowLength) + j) + offset;
+				int indexRGB = i*width*3 + j;	// not including padding in the RGB length
+				unsigned char val = bmpFile[indexBMP];
+				rgbVals[indexRGB] = val;
 			}
 		}
 		delete[] bmpFile;
@@ -120,9 +123,9 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		// bV5SizeImage - The size, in bytes, of the image. This may be set to zero for BI_RGB bitmaps
 		Helper::write(fout, emptyDWord, 4);
 		// bV5XPelsPerMeter - The horizontal resolution, in pixels-per-meter, of the target device for the bitmap
-		Helper::write(fout, 0, 4);	// 3780 seems to be the default set by the computer. I can't find any info online. 
+		Helper::write(fout, 3780, 4);	// 3780 seems to be the default set by the computer. I can't find any info online. 
 		// bV5YPelsPerMeter - The vertical resolution, in pixels-per-meter, of the target device for the bitmap
-		Helper::write(fout, 0, 4);	// 3780 seems to be the default value. 
+		Helper::write(fout, 3780, 4);	// 3780 seems to be the default value. 
 		// bV5ClrUsed - The number of color indexes in the color that are actually used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the bV5BitCount member for the compression mode specified by bV5Compression
 		Helper::write(fout, emptyDWord, 4);
 		// bV5ClrImportant - The number of color indexes that are required for displaying the bitmap. If this value is zero, all colors are required
@@ -133,11 +136,18 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		{
 			// add pixel data
 			for (int j = 0; j < rowLength; j++)
-				Helper::write(fout, RGBvals[rowLength*i + j], 1);
+			{
+				char toWrite = RGBvals[i*rowLength + j];
+				Helper::write(fout, toWrite, 1);
+			}
 			// add padding if necessary
 			for (int j = 0; j < padding; j++)
 				Helper::write(fout, 'B', 1);
 		}
+	}
+	else
+	{
+		std::cout << "Could not open file" << std::endl;
 	}
 
 	fout.close();
