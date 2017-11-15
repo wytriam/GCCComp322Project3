@@ -40,19 +40,27 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		width = Helper::getNumber(bmpFile, 18, 4);
 		height = Helper::getNumber(bmpFile, 22, 4);
 
+		// calculate necessary padding
+		int padding = 4 - ((width * 3) % 4);
+		if (padding == 4)
+			padding = 0;
+
 		// initialize rgbVals
-		int RGBsize = (width*3) * height;
+		//int RGBsize = ((width*3) + padding) * height;
+		int RGBsize = (width * 3) * height;
 		rgbVals = new unsigned char[RGBsize];
 		
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 10, 4);
 		// loop over everything, skipping over the padding
+
+		int rowLength = width * 3 + padding;
 		for (int i = 0; i < height; i++)
 		{
-			for (int j = 0; j < (width * 3); j++)
+			for (int j = 0; j < rowLength-padding; j++)
 			{
-				rgbVals[(i*(width * 3)) + j] = bmpFile[offset + ((i*(width * 3)) + j)];
+				rgbVals[(i*rowLength - padding) + j] = bmpFile[offset + ((i*rowLength) + j)];
 			}
 		}
 		delete[] bmpFile;
@@ -119,11 +127,12 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		// bV5ClrImportant - The number of color indexes that are required for displaying the bitmap. If this value is zero, all colors are required
 		Helper::write(fout, emptyDWord, 4);
 		// Pixel Data
+		int rowLength = width * 3;
 		for (int i = 0; i < height; i++)
 		{
 			// add pixel data
-			for (int j = 0; j < (width * 3); j++)
-				Helper::write(fout, RGBvals[(width*3)*i + j], 1);
+			for (int j = 0; j < rowLength; j++)
+				Helper::write(fout, RGBvals[rowLength*i + j], 1);
 			// add padding if necessary
 			for (int j = 0; j < padding; j++)
 				Helper::write(fout, 'B', 1);
