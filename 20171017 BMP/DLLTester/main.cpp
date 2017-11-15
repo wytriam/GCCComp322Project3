@@ -9,7 +9,6 @@ int main(int argc, char** argv)
 	unsigned char* test;
 	test = BMP_Handler::loadBMP("test2.bmp", width, height);	
 	BMP_Handler::saveBMP("t2.bmp", test, width, height);
-	delete[] test;
 
 	return 0;
 }

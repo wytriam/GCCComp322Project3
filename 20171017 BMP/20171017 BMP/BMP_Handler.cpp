@@ -46,8 +46,8 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 			padding = 0;
 
 		// initialize rgbVals
-		//int RGBsize = ((width*3) + padding) * height;
-		int RGBsize = (width * 3) * height;
+		int RGBsize = ((width*3) + padding) * height;
+		//int RGBsize = (width * 3) * height;
 		rgbVals = new unsigned char[RGBsize];
 		
 		// read the pixel array, populate rgbVals
