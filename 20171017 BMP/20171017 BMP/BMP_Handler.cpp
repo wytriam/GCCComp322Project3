@@ -40,13 +40,8 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		width = Helper::getNumber(bmpFile, 18, 4);
 		height = Helper::getNumber(bmpFile, 22, 4);
 
-		// calculate necessary padding
-		int padding = 4 - ((width * 3) % 4);
-		if (padding == 4)
-			padding = 0;
-
 		// initialize rgbVals
-		int RGBsize = ((width*3) + padding ) * height;
+		int RGBsize = (width*3) * height;
 		rgbVals = new unsigned char[RGBsize];
 		
 		// read the pixel array, populate rgbVals
@@ -57,7 +52,7 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		{
 			for (int j = 0; j < (width * 3); j++)
 			{
-				rgbVals[(i*height) + j] = bmpFile[offset + ((i*height) + j)];
+				rgbVals[(i*(width * 3)) + j] = bmpFile[offset + ((i*(width * 3)) + j)];
 			}
 		}
 		delete[] bmpFile;
@@ -107,7 +102,7 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		Helper::write(fout, 1, 2);
 		// bV5BitCount - The number of bits that define each pixel and the maximum number of colors in the bitmap. 
 			// Value - 24. Meaning: The bitmap has a maximum of 2^24 colors, and the bmiColors member of BITMAPINFO is NULL.
-			// Each 3-byte triplet in the bitmap array represents the relative intensites of blue, green, and red, respecitively
+			// Each 3-byte triplet in the bitmap array represents the relative intensites of blue, green, and red, respectively
 			// for a pixel. The bmiColors color table is used for optimizing colors used on palette-based devices, and 
 			// must contain the number of entried specifed by the bV5ClrUsed member of the BITMAPV5HEADER structure
 		Helper::write(fout, 24, 2);
@@ -116,9 +111,9 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		// bV5SizeImage - The size, in bytes, of the image. This may be set to zero for BI_RGB bitmaps
 		Helper::write(fout, emptyDWord, 4);
 		// bV5XPelsPerMeter - The horizontal resolution, in pixels-per-meter, of the target device for the bitmap
-		Helper::write(fout, 3780, 4);	// 3780 seems to be the default set by the computer. I can't find any info online. 
+		Helper::write(fout, 0, 4);	// 3780 seems to be the default set by the computer. I can't find any info online. 
 		// bV5YPelsPerMeter - The vertical resolution, in pixels-per-meter, of the target device for the bitmap
-		Helper::write(fout, 3780, 4);	// 3780 seems to be the default value. 
+		Helper::write(fout, 0, 4);	// 3780 seems to be the default value. 
 		// bV5ClrUsed - The number of color indexes in the color that are actually used by the bitmap. If this value is zero, the bitmap uses the maximum number of colors corresponding to the value of the bV5BitCount member for the compression mode specified by bV5Compression
 		Helper::write(fout, emptyDWord, 4);
 		// bV5ClrImportant - The number of color indexes that are required for displaying the bitmap. If this value is zero, all colors are required
@@ -128,10 +123,10 @@ void BMP_Handler::saveBMP(const char* filename, const unsigned char* RGBvals, in
 		{
 			// add pixel data
 			for (int j = 0; j < (width * 3); j++)
-				Helper::write(fout, RGBvals[height*i + j], 1);
+				Helper::write(fout, RGBvals[(width*3)*i + j], 1);
 			// add padding if necessary
 			for (int j = 0; j < padding; j++)
-				Helper::write(fout, '\0', 1);
+				Helper::write(fout, 'B', 1);
 		}
 	}
 

@@ -35,7 +35,6 @@ void Helper::write(std::ofstream& fout, char input, int size)
 // input an int
 void Helper::write(std::ofstream& fout, int input, int size)
 {
-	char* cinput = reinterpret_cast<char *>(&input);
 	//write to fout
-	fout.write(cinput, size);
+	fout.write(reinterpret_cast<char *>(&input), size);
 }
