@@ -1,0 +1,13 @@
+movement when Time.timeScale == 0;
+add music
+
+
+CREATE BIRMINGHAM MODE WITH STUPID MOUSELOOK AND GOD TOWERS THAT COST 0 MANA TO CREATE
+SPLASH SCREEN
+change font color on level 3
+
+slow slows too much
+
+display waves
+
+lights level 2

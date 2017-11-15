@@ -7,12 +7,15 @@
 // read a number from some amount of bytes in Little Endian
 int Helper::getNumber(const char* bmpFile, int index, int range)
 {
-	std::string val = "";
-	for (int i = index + range - 1; i >= index; i--)
+	char* val = new char[range];
+	for (int i = 0; i < range; i++)
 	{
-		val += bmpFile[i];
+		val[i] = bmpFile[index + range - 1 - i];
 	}
-	return atoi(val.c_str());
+	int returnVal = reinterpret_cast<int>(val);
+	delete[] val;
+	return returnVal;
+
 }
 
 // input a string
