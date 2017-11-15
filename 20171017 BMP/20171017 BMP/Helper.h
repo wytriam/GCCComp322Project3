@@ -13,5 +13,5 @@ public:
 	static void write(std::ofstream&, char*, int);
 	static void write(std::ofstream&, char, int);
 	static void write(std::ofstream&, int, int);
-	static char* toLittleEndian(char*, int);
+	static char* switchEndianness(char*, int);
 };

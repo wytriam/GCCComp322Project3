@@ -11,7 +11,7 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 	// create an array to return
 	unsigned char* rgbVals = NULL;
 	std::streampos size;
-	char * bmpFile;
+	char* bmpFile;
 	// open the file in binary mode
 	std::ifstream fin;
 	fin.open(filename, std::ios::in | std::ios::binary | std::ios::ate);

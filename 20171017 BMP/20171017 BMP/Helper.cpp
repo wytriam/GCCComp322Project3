@@ -7,15 +7,22 @@
 // read a number from some amount of bytes in Little Endian
 int Helper::getNumber(const char* bmpFile, int index, int range)
 {
+	//char numTest[4] = { '\x0020', '\x0003', '\x0000', '\x0000' };
+	//unsigned int* intTest = reinterpret_cast<unsigned int*>(numTest);
+
+	//std::cout << *intTest << ", " << sizeof(intTest) << std::endl;
+	//
+	//system("pause");
+	
 	char* val = new char[range];
 	for (int i = 0; i < range; i++)
 	{
-		val[i] = bmpFile[index + range - 1 - i];
+		val[i] = bmpFile[index + i];
 	}
-	int returnVal = reinterpret_cast<int>(val);
+	unsigned int* returnValP = reinterpret_cast<unsigned int*>(val);
 	delete[] val;
+	unsigned int returnVal = *returnValP;
 	return returnVal;
-
 }
 
 // input a string
@@ -32,7 +39,7 @@ void Helper::write(std::ofstream& fout, std::string input, int size)
 		cinput[i] = c;
 	}
 	//write to fout
-	fout.write(toLittleEndian(cinput, size), size);
+	fout.write(switchEndianness(cinput, size), size);
 	//move the stream pointer to the next read position
 	//fout.seekp(fout.tellp(), size);
 	delete[] cinput;
@@ -42,7 +49,7 @@ void Helper::write(std::ofstream& fout, std::string input, int size)
 void Helper::write(std::ofstream& fout, char* input, int size)
 {
 	//write to fout
-	fout.write(toLittleEndian(input, size), size);
+	fout.write(switchEndianness(input, size), size);
 	//move the stream pointer to the next read position
 	//fout.seekp(fout.tellp(), size);
 }
@@ -62,13 +69,13 @@ void Helper::write(std::ofstream& fout, int input, int size)
 {
 	char* cinput = reinterpret_cast<char *>(&input);
 	//write to fout
-	fout.write(toLittleEndian(cinput, size), size);
+	fout.write(switchEndianness(cinput, size), size);
 	//move the stream pointer to the next read position
 	//fout.seekp(fout.tellp(), size);
 }
 
 // flip a char*
-char* Helper::toLittleEndian(char* input, int size)
+char* Helper::switchEndianness(char* input, int size)
 {
 	// Adapted from http://www.cplusplus.com/forum/beginner/189483/
 	for (int i = 0; i < (size / 2); i++) 
