@@ -53,6 +53,7 @@ unsigned char* BMP_Handler::loadBMP(const char* filename, int& width, int& heigh
 		// read the pixel array, populate rgbVals
 		// pixel array should start at 54 (14 for BITMAPFILEHEADER, 40 for BITMAPV5HEADER)
 		int offset = Helper::getNumber(bmpFile, 10, 4);
+		offset--; // stupid count by one
 		// loop over everything, skipping over the padding
 
 		int rowLength = width * 3 + padding;
