@@ -1,3 +1,9 @@
+/*
+	This is code to load and save BMP files with 24-bit color. 
+	Written for COMP 322 
+	Thomas Frick
+*/
+
 #include "BMP_Handler.h"
 #include <fstream>
 #include <iostream>

@@ -1,3 +1,7 @@
+/*
+	This is a derpy little stub class to let me test things the BMP_Handler class. Lots of breakpoints that have now been removed. 
+*/
+
 #include <BMP_Handler.h>
 #include <cstdlib>
 #include <iostream>
